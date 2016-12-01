@@ -1,2 +1,6 @@
+0.02 201612xx
+    - Documentation fix for synopsis
+    . move author tests into xt/
+
 0.01 20140629
     - Released to an unsuspecting world
