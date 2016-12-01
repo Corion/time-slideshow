@@ -14,7 +14,7 @@ Time::Slideshow - simple stateless slideshow with a fixed set of images
         starttime => 0,
         slides => [ 'picture1.jpg', 'picture2.jpg' ],
         shuffle => 0, # pseudo-rng
-        display => 45, # show each slide for 45 seconds
+        duration => 45, # show each slide for 45 seconds
     );
     my $current_slide= $slideshow->current_slide;           # picture1.jpg
     my $next_slide= $slideshow->next_slide;                 # picture2.jpg
