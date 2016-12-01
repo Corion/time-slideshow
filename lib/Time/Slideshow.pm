@@ -176,6 +176,7 @@ sub current_slide_index {
     $time -= $self->{ starttime };
     
     my $items= 0+@{ $self->slides };
+    return undef unless $items;
     
     my $index= int (($time % ($self->duration * $items)) / $self->duration);
     
