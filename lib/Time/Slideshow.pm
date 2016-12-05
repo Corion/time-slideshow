@@ -332,4 +332,32 @@ to all users that load that page.
       <body><img src="$image" /></body></html>
   HTML
 
+=head1 REPOSITORY
+
+The public repository of this module is
+L<http://github.com/Corion/time-slideshow>.
+
+=head1 SUPPORT
+
+The public support forum of this module is
+L<http://perlmonks.org/>.
+
+=head1 BUG TRACKER
+
+Please report bugs in this module via the RT CPAN bug queue at
+L<https://rt.cpan.org/Public/Dist/Display.html?Name=Time-Slideshow>
+or via mail to L<time-slideshow@rt.cpan.org>.
+
+=head1 AUTHOR
+
+Max Maischein C<corion@cpan.org>
+
+=head1 COPYRIGHT (c)
+
+Copyright 2014-2016 by Max Maischein C<corion@cpan.org>.
+
+=head1 LICENSE
+
+This module is released under the same terms as Perl itself.
+
 =cut
