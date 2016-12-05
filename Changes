@@ -1,5 +1,6 @@
-0.02 201612xx
+0.02 20161206
     - Documentation fix for synopsis
+    . Add Prima example
     . move author tests into xt/
 
 0.01 20140629

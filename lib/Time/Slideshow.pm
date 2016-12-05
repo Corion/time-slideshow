@@ -77,9 +77,9 @@ sub new {
     $options{ shuffle }||= 0;
     $options{ duration }||= 45;
     $options{ slides }||= [];
-    
+
     my $self= bless \%options, $class;
-    
+
     $self
 }
 
@@ -174,12 +174,12 @@ sub current_slide_index {
     $time = time
         unless defined $time;
     $time -= $self->{ starttime };
-    
+
     my $items= 0+@{ $self->slides };
     return undef unless $items;
-    
+
     my $index= int (($time % ($self->duration * $items)) / $self->duration);
-    
+
     if( $self->{ shuffle } and $items > 1) {
         # Apply a permutation
         # We don't want permutation 0 and 1 as 0 and 1 are identical
@@ -193,30 +193,30 @@ sub current_slide_index {
         #           0     1
         #             2     3
         #               4     5
-        # 
+        #
         # For 10 items, Permutation 8 (Step size 3)
         #           0 1 2 3 4 5 6 7 8 9
         #           0     1     2     3
         #             4     5     6
         #               7     8     9
-        
+
         my $permutation= (int ($time / ($self->duration * $items)) % ($items-2));
         my $step= $permutation;
         $step++; # Increment between 1 and $items-1
-        
+
         my $gcd= gcd( $items, $step );
         my $round_size= int( $items / $gcd );
 
         # The round counts from $round_size towards 1 to shuffle the order of loops a bit
         my $round= $round_size - int($index / $round_size) +1;
-        
+
         my $old_index= $index;
         $index= ((($old_index *$step) % $items) + $round ) % $items;
 
-        #warn sprintf "Old Index % 2d  Step: % 2d  Round: % 2d  Round size: % 2d  Index: % 2d  GCD: % 2d\n", 
+        #warn sprintf "Old Index % 2d  Step: % 2d  Round: % 2d  Round size: % 2d  Index: % 2d  GCD: % 2d\n",
         #              $old_index,     $step,      $round,      $round_size,      $index,      $gcd;
     };
-    
+
     $index
 };
 
@@ -268,11 +268,11 @@ Displaying the image itself is left to you to implement
 with your favourite image display method.
 
   use Time::Slideshow;
-  
+
   my $s= Time::Slideshow->new(
       slides => [ glob 'slides/*.jpg' ],
   );
-  
+
   while(1) {
       print sprintf "Now showing slide '%s'\n", $s->current_slide;
       print sprintf "Next up is '%s'\n', $s->next_slide;
@@ -288,11 +288,11 @@ timer events to display a new image.
 
   use AnyEvent;
   use Time::Slideshow;
-  
+
   my $s= Time::Slideshow->new(
       slides => [ glob 'slides/*.jpg' ],
   );
-  
+
   my $slideshow_timer;
   my $display_and_reschedule; $display_and_reschedule= sub {
       print sprintf "Now showing slide '%s'\n", $s->current_slide;
@@ -303,7 +303,7 @@ timer events to display a new image.
       );
   };
   $display_and_reschedule->();
-  
+
   # Wait and do other stuff
   AnyEvent->condvar->recv;
 
@@ -316,7 +316,7 @@ to all users that load that page.
 
   use CGI;
   use Time::Slideshow;
-  
+
   my $s= Time::Slideshow->new(
       slides => [ glob 'slides/*.jpg' ],
   );
@@ -332,5 +332,37 @@ to all users that load that page.
       </head>
       <body><img src="$image" /></body></html>
   HTML
+
+=head2 Prima
+
+Using L<Prima>, we can create an application with a natve UI that displays
+the images. Not implemented here are the resizing or zooming of the images
+to the window size.
+
+  use Prima qw(Application ImageViewer);
+  use Time::Slideshow;
+
+  my $s= Time::Slideshow->new(
+      slides => [ glob 'demo/*.png' ],
+  );
+  my $window = Prima::MainWindow->new();
+  my $image = $window->insert( ImageViewer =>
+      growMode => gm::Client,
+      rect => [0, 0, $window->width, $window->height],
+      autoZoom => 1,
+  );
+  my $filename = $s->current_slide;
+  $image->imageFile($filename);
+  $window->insert( Timer =>
+      timeout => 5000, # checking every 5 seconds is enough
+      onTick  => sub {
+          if( $s->current_slide ne $filename ) {
+              $filename = $s->current_slide;
+              $image->imageFile($filename);
+          };
+      }
+  )->start;
+
+  Prima->run;
 
 =cut
