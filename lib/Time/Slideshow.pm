@@ -2,7 +2,7 @@ package Time::Slideshow;
 use strict;
 use Time::HiRes qw(time);
 use vars qw($VERSION);
-$VERSION= '0.01';
+$VERSION= '0.02';
 
 =head1 NAME
 

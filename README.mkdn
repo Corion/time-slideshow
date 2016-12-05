@@ -8,7 +8,7 @@ Time::Slideshow - simple stateless slideshow with a fixed set of images
         starttime => 0,
         slides => [ 'picture1.jpg', 'picture2.jpg' ],
         shuffle => 0, # pseudo-rng
-        display => 45, # show each slide for 45 seconds
+        duration => 45, # show each slide for 45 seconds
     );
     my $current_slide= $slideshow->current_slide;           # picture1.jpg
     my $next_slide= $slideshow->next_slide;                 # picture2.jpg
@@ -36,24 +36,24 @@ other than through the passage of time.
 
 Creates a new slideshow object and returns it. The options are
 
-- __slides__
+- **slides**
 
     Array reference to the slides. These can be filenames
     or URLs or whatever else helps your program to find and display
     the appropriate image.
 
-- __duration__
+- **duration**
 
     The time how long every image is displayed, in seconds. The default
     value is 45.
 
-- __shuffle__
+- **shuffle**
 
     If you want the order of the images to be shuffled, pass
     a true value to this option. See the below discussion
     on what different orders you can expect from shuffling.
 
-- __starttime__
+- **starttime**
 
     If you want to set up a different offset of the start time,
     pass this option with the epoch value of the start time. Usually,
@@ -106,7 +106,7 @@ This returns the index of the slide that is currently displayed.
 
 Most likely, you want to use `$show->current_slide` instead.
 
-## `$show->slide_at $index>>`
+## `$show->slide_at $index`
 
     my $slide_count= @{ $show->slides };
     for my $slide ( 0..$slide_count-1 ) {
@@ -130,11 +130,11 @@ Displaying the image itself is left to you to implement
 with your favourite image display method.
 
     use Time::Slideshow;
-    
+
     my $s= Time::Slideshow->new(
         slides => [ glob 'slides/*.jpg' ],
     );
-    
+
     while(1) {
         print sprintf "Now showing slide '%s'\n", $s->current_slide;
         print sprintf "Next up is '%s'\n', $s->next_slide;
@@ -150,11 +150,11 @@ timer events to display a new image.
 
     use AnyEvent;
     use Time::Slideshow;
-    
+
     my $s= Time::Slideshow->new(
         slides => [ glob 'slides/*.jpg' ],
     );
-    
+
     my $slideshow_timer;
     my $display_and_reschedule; $display_and_reschedule= sub {
         print sprintf "Now showing slide '%s'\n", $s->current_slide;
@@ -165,7 +165,7 @@ timer events to display a new image.
         );
     };
     $display_and_reschedule->();
-    
+
     # Wait and do other stuff
     AnyEvent->condvar->recv;
 
@@ -178,7 +178,7 @@ to all users that load that page.
 
     use CGI;
     use Time::Slideshow;
-    
+
     my $s= Time::Slideshow->new(
         slides => [ glob 'slides/*.jpg' ],
     );
@@ -195,10 +195,62 @@ to all users that load that page.
         <body><img src="$image" /></body></html>
     HTML
 
-# POD ERRORS
+## Prima
 
-Hey! __The above document had some coding errors, which are explained below:__
+Using [Prima](https://metacpan.org/pod/Prima), we can create an application with a natve UI that displays
+the images. Not implemented here are the resizing or zooming of the images
+to the window size.
 
-- Around line 220:
+    use Prima qw(Application ImageViewer);
+    use Time::Slideshow;
 
-    Unterminated C< ... > sequence
+    my $s= Time::Slideshow->new(
+        slides => [ glob 'demo/*.png' ],
+    );
+    my $window = Prima::MainWindow->new();
+    my $image = $window->insert( ImageViewer =>
+        growMode => gm::Client,
+        rect => [0, 0, $window->width, $window->height],
+        autoZoom => 1,
+    );
+    my $filename = $s->current_slide;
+    $image->imageFile($filename);
+    $window->insert( Timer =>
+        timeout => 5000, # checking every 5 seconds is enough
+        onTick  => sub {
+            if( $s->current_slide ne $filename ) {
+                $filename = $s->current_slide;
+                $image->imageFile($filename);
+            };
+        }
+    )->start;
+
+    Prima->run;
+
+# REPOSITORY
+
+The public repository of this module is
+[http://github.com/Corion/time-slideshow](http://github.com/Corion/time-slideshow).
+
+# SUPPORT
+
+The public support forum of this module is
+[http://perlmonks.org/](http://perlmonks.org/).
+
+# BUG TRACKER
+
+Please report bugs in this module via the RT CPAN bug queue at
+[https://rt.cpan.org/Public/Dist/Display.html?Name=Time-Slideshow](https://rt.cpan.org/Public/Dist/Display.html?Name=Time-Slideshow)
+or via mail to [time-slideshow@rt.cpan.org](https://metacpan.org/pod/time-slideshow@rt.cpan.org).
+
+# AUTHOR
+
+Max Maischein `corion@cpan.org`
+
+# COPYRIGHT (c)
+
+Copyright 2014-2016 by Max Maischein `corion@cpan.org`.
+
+# LICENSE
+
+This module is released under the same terms as Perl itself.
