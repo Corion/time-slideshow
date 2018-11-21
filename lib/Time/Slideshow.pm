@@ -256,7 +256,9 @@ __END__
 =head1 SHUFFLING PERMUTATIONS
 
 This module does not use the real permutations
-of the slides,
+of the slides. The module uses an approach to select non-neighbouring images
+by first selecting a permutation from C<1..@items -2> according to the current
+time and then selecting the C<n-th> slide from that permutation.
 
 =head1 INTEGRATION
 
@@ -335,7 +337,7 @@ to all users that load that page.
 
 =head2 Prima
 
-Using L<Prima>, we can create an application with a natve UI that displays
+Using L<Prima>, we can create an application with a native UI that displays
 the images. Not implemented here are the resizing or zooming of the images
 to the window size.
 
