@@ -370,12 +370,12 @@ to the window size.
 =head1 REPOSITORY
 
 The public repository of this module is
-L<http://github.com/Corion/time-slideshow>.
+L<https://github.com/Corion/time-slideshow>.
 
 =head1 SUPPORT
 
 The public support forum of this module is
-L<http://perlmonks.org/>.
+L<https://perlmonks.org/>.
 
 =head1 BUG TRACKER
 
@@ -389,7 +389,7 @@ Max Maischein C<corion@cpan.org>
 
 =head1 COPYRIGHT (c)
 
-Copyright 2014-2016 by Max Maischein C<corion@cpan.org>.
+Copyright 2014-2018 by Max Maischein C<corion@cpan.org>.
 
 =head1 LICENSE
 
